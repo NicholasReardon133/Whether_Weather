@@ -42,7 +42,6 @@ public class API {
     public double getTemp(String city) {
         //ApiKey key = new ApiKey(url, appID, units);
         String jsonString1 = key.GetData(city);
-        System.out.println(jsonString1);
         JSONObject jsonParsor1 = new JSONObject(jsonString1);
         Double temp1 = jsonParsor1.getJSONObject("main").getDouble("temp");
         return temp1;

@@ -10,6 +10,7 @@ public class main {
     public static GridLayout gLayout1 = new GridLayout(0,1);
 
     private static API api = new API();
+    private static Predictor predictor = new Predictor();
 
     private static String originalLoc;
     private static String currentLoc;
@@ -19,7 +20,7 @@ public class main {
     private static int upperChoice;
     private static int lowerChoice;
     private static int oldTemp;
-    private static int newTemp;
+    public static int newTemp;
     private static int humidity;
     private static int windSpeed;
 
@@ -58,7 +59,7 @@ public class main {
 
         final JLabel Q3 = new JLabel("What sex are you?\n (male/female)", SwingConstants.CENTER);
         grid.add(Q3);
-        final JTextField answerField3 = new JTextField();          //Text and text field for Q3
+        final JComboBox<String> answerField3 = new JComboBox<String>(Predictor.sexes);          //Text and text field for Q3
         grid.add(answerField3);
 
         f.add(grid, BorderLayout.CENTER);
@@ -70,13 +71,12 @@ public class main {
             public void actionPerformed(ActionEvent e) {
                 String originalLoc = answerField1.getText();       //Submit button and saves user input as variables
                 String currentLoc = answerField2.getText();
-                String gender = answerField3.getText();
+                String gender = (String)answerField3.getSelectedItem();
                 setVars(originalLoc, currentLoc, gender);
                 oldTemp = (int)api.getTemp(originalLoc);
                 newTemp = (int)api.getTemp(currentLoc);
                 humidity = (int)api.getHumidity(currentLoc);
                 windSpeed = (int)api.getWind(currentLoc);
-                System.out.println(oldTemp);
                 f.removeAll();
                 f.setVisible(false);
                 if(gender.equals("female")) {
@@ -120,7 +120,6 @@ public class main {
             @Override                                                             //gets all of the choices and makes a string
             public void actionPerformed(ActionEvent e) {
                 String outfitChoice = (String)upperClothesBox.getSelectedItem() + ", " + (String)lowerClothesBox.getSelectedItem();
-                System.out.println(upperClothesBox.getSelectedIndex() + " " + lowerClothesBox.getSelectedIndex());
                 upperChoice = upperClothesBox.getSelectedIndex() - 3;
                 lowerChoice = lowerClothesBox.getSelectedIndex() - 3;
                 setVars(outfitChoice);
@@ -163,7 +162,6 @@ public class main {
             @Override                                                        //gets all of the choices and makes a string
             public void actionPerformed(ActionEvent e) {
                 String outfitChoice = (String)upperClothesBox.getSelectedItem() + ", " + (String)lowerClothesBox.getSelectedItem();
-                System.out.println(upperClothesBox.getSelectedIndex() + " " + lowerClothesBox.getSelectedIndex());
                 upperChoice = upperClothesBox.getSelectedIndex() - 3;
                 lowerChoice = lowerClothesBox.getSelectedIndex() - 3;
                 setVars(outfitChoice);
@@ -186,10 +184,10 @@ public class main {
         f2.setBackground(Color.decode("#55a6d9"));
 
         JTextArea finalText = new JTextArea();
-        finalClothes = Predictor.getFinalClothes(upperChoice, lowerChoice);
+        finalClothes = predictor.getFinalClothes(upperChoice);
         finalText.setText("The weather today is " + newTemp + "\u00B0F in " + currentLoc + ". The " +
-                "humidity is " + humidity + "% and the wind speed is " + windSpeed + " mph. Based on your habits, " +
-                "you should wear " + finalClothes);
+                "humidity is " + humidity + "% and the wind speed is " + windSpeed + " mph. Based on your " +
+                "outfit habits, you should wear a " + finalClothes);
         finalText.setWrapStyleWord(true);
         finalText.setLineWrap(true);
         finalText.setOpaque(false);
